@@ -10,11 +10,23 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ForceBackupSubCmd extends IRPCommand {
 
     public ForceBackupSubCmd(InventoryRollbackPlus mainIn) {
         super(mainIn);
+
+        // Auto save task - Based on Side Survival Fork
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers())
+
+                    new SaveInventory(player, LogType.FORCE, null, null, player.getInventory(), player.getEnderChest()).createSave(true);
+            }
+        }.runTaskTimer(mainIn, 7200, 7200L);
     }
 
     @Override
